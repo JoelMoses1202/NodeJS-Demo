@@ -1,27 +1,28 @@
+/* Require statements- express,file,cors and dotenv */
 let express = require("express");
 let fs = require("fs");
+let cors = require("cors");
+require("dotenv").config();
+
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(
+  cors({
+    origin: ["http://localhost:5500", "http://127.0.0.1:5500"],
+  })
+);
+/* Routing Require Statement*/
 
-// let createRoute = require('./routes/create');
-// app.use("/create", createRoute);
-let readRoute = require("./routes/read");
-app.use("/read", readRoute);
+let route = require("./routes/buddy.router");
 
-let addRoute = require("./routes/add");
-
-app.use("/add", addRoute);
-
-let updateRoute = require("./routes/update");
-app.use("/update", updateRoute);
-let deleteRoute = require("./routes/delete");
-app.use("/delete", deleteRoute);
-
+/* Routing using buddy and create*/
+app.use("/buddy", route);
 app.use("/create", (req, res) => {
   fs.writeFileSync("cdw_ace23_buddies.json", "[]");
 });
 
-app.listen(4000, () => {
-  console.log("listen");
+/*Listen Port */
+app.listen(process.env.PORT, () => {
+  console.log("Listening..... to PORT "+process.env.PORT);
 });
